@@ -8,13 +8,13 @@ Un pequeño programa que apunta **todos los partidos del Mundial de League of Le
 - Si Riot mueve un partido de hora, el evento se mueve.
 - Si borras un evento sin querer, vuelve a aparecer en la siguiente sincronización.
 
-Funciona como un **asistente que cada media hora mira la web oficial de lolesports y corrige tu agenda** si algo ha cambiado.
+Funciona como un **asistente que dos veces al día mira la web oficial de lolesports y corrige tu agenda** si algo ha cambiado.
 
 ## Cómo funciona (las tres piezas)
 
 1. **La fuente: la API de lolesports.com.** Es la misma "ventanilla" de donde la web oficial saca el calendario. No es oficial para el público, pero es abierta y estable desde hace años. Cada partido tiene un número de identificación fijo, incluso cuando aún no se saben los equipos.
 2. **El script `sync.py`.** Pide la lista de partidos, la traduce a eventos de calendario y se los manda a Google. A cada evento le pone como "DNI" el número del partido (`lol` + número). Así, si lo ejecutas 100 veces, no duplica nada: busca el evento por su DNI y solo lo toca si ha cambiado.
-3. **El reloj: GitHub Actions.** Un ordenador de GitHub ejecuta el script cada 30 minutos de forma gratuita, sin que tu PC tenga que estar encendido.
+3. **El reloj: GitHub Actions.** Un ordenador de GitHub ejecuta el script dos veces al día de forma gratuita: a las 8:00 y a las 18:00 hora peninsular (7:00 y 17:00 a partir del cambio de hora del 25 de octubre), justo antes de que empiecen los partidos de la tarde, sin que tu PC tenga que estar encendido.
 
 ## Decisiones y por qué
 
@@ -22,7 +22,7 @@ Funciona como un **asistente que cada media hora mira la web oficial de lolespor
 |---|---|
 | Calendario **dedicado** (no el principal) | Lo puedes ocultar, colorear o borrar entero de un golpe al acabar el Mundial. |
 | **Cuenta de servicio** de Google en lugar de iniciar sesión | Es como darle una llave solo de ese calendario a un "robot". No tiene acceso a tu correo ni a tus otros calendarios. |
-| API en lugar de un enlace `.ics` | Google refresca los calendarios suscritos por enlace cada 12–24 h; así los TBD se resuelven en minutos. |
+| API en lugar de un enlace `.ics` | Google refresca los calendarios suscritos por enlace cada 12–24 h; así controlamos cuándo se actualiza y, si hay prisa, se puede lanzar a mano desde GitHub (*Run workflow*). |
 | **Sin resultados** en el título por defecto | Para no comerte spoilers si ves el partido en diferido. Se activa con `SHOW_RESULTS=true`. |
 | Eventos marcados como "disponible" | Para que no te bloqueen la agenda como si fueran reuniones. |
 | Duración: Bo1 = 1 h, Bo3 = 3 h, Bo5 = 5 h | Estimación; la API no da la hora de fin. |
@@ -73,9 +73,10 @@ python sync.py --dry-run
 - **Play-ins / Swiss / Cuartos…**: fases del torneo. El sistema suizo empareja a equipos con el mismo balance de victorias y derrotas.
 - **Cuenta de servicio**: un usuario "robot" de Google, con permisos solo sobre lo que tú le compartes.
 - **GitHub Actions**: ordenadores de GitHub que ejecutan tareas automáticas.
-- **Cron**: forma de decir "cada X tiempo" (aquí, `*/30 * * * *` = cada 30 minutos).
+- **Cron**: forma de decir "cada X tiempo" (aquí, `0 6,16 * * *` = a las 6:00 y a las 16:00 UTC cada día).
 - **Secret**: valor guardado cifrado en GitHub que el programa puede leer pero nadie puede ver.
 
 ## Registro de cambios
 
 - **2026-10-15** — Versión inicial: script, sincronización cada 30 min, guía de configuración.
+- **2026-10-15** — Frecuencia reducida a dos veces al día (6:00 y 16:00 UTC): suficiente para ir rellenando los TBD.

@@ -2,7 +2,7 @@ name: Sincronitza Worlds
 
 on:
   schedule:
-    - cron: "*/30 * * * *"  # cada 30 minuts (GitHub pot endarrerir-ho uns minuts)
+    - cron: "0 6,16 * * *"  # 2 cops al dia, en UTC: matí i just abans dels partits
   workflow_dispatch:         # botó "Run workflow" per llançar-lo a mà
 
 concurrency:
