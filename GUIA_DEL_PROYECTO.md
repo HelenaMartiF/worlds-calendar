@@ -27,6 +27,28 @@ Funciona como un **asistente que dos veces al día mira la web oficial de lolesp
 | Eventos marcados como "disponible" | Para que no te bloqueen la agenda como si fueran reuniones. |
 | Duración: Bo1 = 1 h, Bo3 = 3 h, Bo5 = 5 h | Estimación; la API no da la hora de fin. |
 | Horas guardadas en UTC | Google las muestra en tu zona horaria (y gestiona el cambio de hora del 25 de octubre). |
+| Partidos de **T1** en un calendario aparte (`🔴 T1`) | Las notificaciones de Google van por calendario, no por evento: el robot no puede ponerte avisos a ti. Con un calendario propio para T1, le pones avisos agresivos solo a esos partidos sin que te avisen de los otros 40. |
+| Partidos de T1 en **rojo**, en mayúsculas y "ocupado" | Para que se vean de lejos en la agenda y nadie te meta una reunión encima. |
+| Aviso de **todo el día** "HOY JUEGA T1" | Sale arriba del todo en la vista del día y del móvil, aunque no mires la hora. |
+| Si un TBD resulta ser de T1, el evento se **mueve** | El script lo borra del calendario general y lo crea en el de T1, así nunca aparece repetido. |
+
+## Modo superfan de T1
+
+Cuando juega T1, el partido sale así:
+
+- 🔴🔴 ¡¡JUEGA T1!! T1 VS GEN · Swiss (Bo1) 🔴🔴 → en rojo, a la hora del partido.
+- 🔴🔴🔴 HOY JUEGA T1 · 19:00 vs GEN 🔴🔴🔴 → banner de todo el día.
+
+El equipo se puede cambiar con la variable `FAVORITE_TEAM` en GitHub (por defecto `T1`).
+
+### Activarlo (una vez)
+1. Crea otro calendario en Google Calendar: `🔴 T1`. Ponle color rojo.
+2. Compártelo con el email del robot, con permiso **"Hacer cambios en eventos"** (igual que en el paso 3).
+3. Copia su **ID de calendario** y guárdalo en GitHub como secret `GOOGLE_FAVORITE_CALENDAR_ID`.
+4. En la configuración de `🔴 T1` → **Notificaciones de eventos**, añade varias (por ejemplo, 1 día, 1 hora y 15 minutos antes) y, en **Notificaciones de eventos de todo el día**, "el mismo día a las 9:00".
+5. Lanza el workflow a mano (*Run workflow*).
+
+Si no creas el secret, los partidos de T1 se quedan en el calendario general, igualmente en rojo y con su banner, pero sin notificaciones propias.
 
 ## Puesta en marcha (una sola vez)
 
@@ -80,3 +102,4 @@ python sync.py --dry-run
 
 - **2026-10-15** — Versión inicial: script, sincronización cada 30 min, guía de configuración.
 - **2026-10-15** — Frecuencia reducida a dos veces al día (6:00 y 16:00 UTC): suficiente para ir rellenando los TBD.
+- **2026-10-15** — Modo superfan: partidos de T1 en rojo, banner de todo el día y calendario propio con notificaciones.
