@@ -1,0 +1,27 @@
+name: Sincronitza Worlds
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"  # cada 30 minuts (GitHub pot endarrerir-ho uns minuts)
+  workflow_dispatch:         # botó "Run workflow" per llançar-lo a mà
+
+concurrency:
+  group: sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python sync.py
+        env:
+          GOOGLE_CALENDAR_ID: ${{ secrets.GOOGLE_CALENDAR_ID }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          SHOW_RESULTS: ${{ vars.SHOW_RESULTS }}

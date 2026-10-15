@@ -1,0 +1,4 @@
+# Claus de Google: mai al repositori
+*.json
+.env
+__pycache__/
